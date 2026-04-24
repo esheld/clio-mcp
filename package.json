@@ -1,0 +1,41 @@
+{
+  "name": "clio-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for the Clio legal practice management API — access matters, tasks, activities, and communications",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "clio-mcp-server": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js",
+    "setup": "node dist/cli.js setup",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "clio",
+    "legal",
+    "model-context-protocol",
+    "ai",
+    "llm"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "open": "^10.1.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
