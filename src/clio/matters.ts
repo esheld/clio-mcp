@@ -27,33 +27,4 @@ export class MattersApi {
       { fields: fields ?? DEFAULT_FIELDS }
     );
   }
-
-  async create(data: {
-    description: string;
-    status?: string;
-    open_date?: string;
-    client?: { id: number };
-    practice_area?: { id: number };
-    responsible_attorney?: { id: number };
-    billable?: boolean;
-    [key: string]: unknown;
-  }) {
-    return this.client.post<ClioSingleResponse<ClioMatter>>(
-      "/matters",
-      { data },
-      { fields: DEFAULT_FIELDS }
-    );
-  }
-
-  async update(id: number, data: Record<string, unknown>) {
-    return this.client.patch<ClioSingleResponse<ClioMatter>>(
-      `/matters/${id}`,
-      { data },
-      { fields: DEFAULT_FIELDS }
-    );
-  }
-
-  async delete(id: number) {
-    return this.client.delete(`/matters/${id}`);
-  }
 }

@@ -29,34 +29,4 @@ export class TasksApi {
       { fields: fields ?? DEFAULT_FIELDS }
     );
   }
-
-  async create(data: {
-    name: string;
-    description?: string;
-    status?: string;
-    priority?: string;
-    due_at?: string;
-    matter?: { id: number };
-    assignee?: { id: number };
-    statute_of_limitations?: boolean;
-    [key: string]: unknown;
-  }) {
-    return this.client.post<ClioSingleResponse<ClioTask>>(
-      "/tasks",
-      { data },
-      { fields: DEFAULT_FIELDS }
-    );
-  }
-
-  async update(id: number, data: Record<string, unknown>) {
-    return this.client.patch<ClioSingleResponse<ClioTask>>(
-      `/tasks/${id}`,
-      { data },
-      { fields: DEFAULT_FIELDS }
-    );
-  }
-
-  async delete(id: number) {
-    return this.client.delete(`/tasks/${id}`);
-  }
 }

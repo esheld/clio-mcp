@@ -1,4 +1,3 @@
-import { REGION_HOSTS } from "../auth/credentials.js";
 import { TokenManager } from "../auth/token-manager.js";
 import type { ClioListParams, ClioListResponse } from "./types.js";
 
@@ -6,7 +5,7 @@ export class ClioClient {
   constructor(private tokenManager: TokenManager) {}
 
   private async baseUrl(): Promise<string> {
-    await this.tokenManager.getAccessToken(); // ensure initialized
+    await this.tokenManager.getAccessToken();
     const host = this.tokenManager.getHost();
     return `https://${host}/api/v4`;
   }
@@ -34,60 +33,6 @@ export class ClioClient {
       throw new Error(`Clio API GET ${path} failed (${res.status}): ${body}`);
     }
     return (await res.json()) as T;
-  }
-
-  async post<T>(path: string, data: unknown, params?: Record<string, string>): Promise<T> {
-    const base = await this.baseUrl();
-    const url = new URL(`${base}${path}`);
-    if (params) {
-      for (const [k, v] of Object.entries(params)) {
-        if (v !== undefined && v !== "") url.searchParams.set(k, v);
-      }
-    }
-
-    const res = await fetch(url.toString(), {
-      method: "POST",
-      headers: await this.headers(),
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      const body = await res.text();
-      throw new Error(`Clio API POST ${path} failed (${res.status}): ${body}`);
-    }
-    return (await res.json()) as T;
-  }
-
-  async patch<T>(path: string, data: unknown, params?: Record<string, string>): Promise<T> {
-    const base = await this.baseUrl();
-    const url = new URL(`${base}${path}`);
-    if (params) {
-      for (const [k, v] of Object.entries(params)) {
-        if (v !== undefined && v !== "") url.searchParams.set(k, v);
-      }
-    }
-
-    const res = await fetch(url.toString(), {
-      method: "PATCH",
-      headers: await this.headers(),
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      const body = await res.text();
-      throw new Error(`Clio API PATCH ${path} failed (${res.status}): ${body}`);
-    }
-    return (await res.json()) as T;
-  }
-
-  async delete(path: string): Promise<void> {
-    const base = await this.baseUrl();
-    const res = await fetch(`${base}${path}`, {
-      method: "DELETE",
-      headers: await this.headers(),
-    });
-    if (!res.ok) {
-      const body = await res.text();
-      throw new Error(`Clio API DELETE ${path} failed (${res.status}): ${body}`);
-    }
   }
 
   /**

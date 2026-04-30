@@ -1,8 +1,8 @@
 import {
-  ClioCredentials,
-  REGION_HOSTS,
+  CLIO_HOST,
   loadCredentials,
   saveCredentials,
+  type ClioCredentials,
 } from "./credentials.js";
 
 const REFRESH_BUFFER_MS = 5 * 60 * 1000; // refresh 5 min before expiry
@@ -22,18 +22,8 @@ export class TokenManager {
     return this.creds.access_token;
   }
 
-  getRegion(): string {
-    if (!this.creds) {
-      throw new Error("TokenManager not initialized — call getAccessToken first");
-    }
-    return this.creds.region;
-  }
-
   getHost(): string {
-    if (!this.creds) {
-      throw new Error("TokenManager not initialized — call getAccessToken first");
-    }
-    return REGION_HOSTS[this.creds.region];
+    return CLIO_HOST;
   }
 
   private isExpired(): boolean {
@@ -44,8 +34,7 @@ export class TokenManager {
   private async refresh(): Promise<void> {
     if (!this.creds) throw new Error("No credentials loaded");
 
-    const host = REGION_HOSTS[this.creds.region];
-    const res = await fetch(`https://${host}/oauth/token`, {
+    const res = await fetch(`https://${CLIO_HOST}/oauth/token`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({

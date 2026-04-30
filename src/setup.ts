@@ -3,14 +3,10 @@ import { URL } from "node:url";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import open from "open";
-import {
-  ClioRegion,
-  REGION_HOSTS,
-  saveCredentials,
-} from "./auth/credentials.js";
+import { CLIO_HOST, saveCredentials } from "./auth/credentials.js";
 
 const REDIRECT_PORT = 3456;
-const REDIRECT_URI = `http://localhost:${REDIRECT_PORT}/callback`;
+const REDIRECT_URI = `http://127.0.0.1:${REDIRECT_PORT}/callback`;
 
 async function prompt(question: string): Promise<string> {
   const rl = createInterface({ input: stdin, output: stdout });
@@ -25,18 +21,9 @@ export async function runSetup(): Promise<void> {
   const clientId = await prompt("Clio Client ID (application key): ");
   const clientSecret = await prompt("Clio Client Secret: ");
 
-  console.log("\nRegions: us, ca, eu, au");
-  let region = (await prompt("Clio region [us]: ")) || "us";
-  if (!["us", "ca", "eu", "au"].includes(region)) {
-    console.error(`Invalid region "${region}". Using "us".`);
-    region = "us";
-  }
-  const clioRegion = region as ClioRegion;
-  const host = REGION_HOSTS[clioRegion];
-
   const authCode = await new Promise<string>((resolve, reject) => {
     const server = createServer((req, res) => {
-      const url = new URL(req.url ?? "/", `http://localhost:${REDIRECT_PORT}`);
+      const url = new URL(req.url ?? "/", `http://127.0.0.1:${REDIRECT_PORT}`);
       if (url.pathname !== "/callback") {
         res.writeHead(404);
         res.end("Not found");
@@ -70,9 +57,9 @@ export async function runSetup(): Promise<void> {
       resolve(code);
     });
 
-    server.listen(REDIRECT_PORT, () => {
+    server.listen(REDIRECT_PORT, "127.0.0.1", () => {
       const authorizeUrl =
-        `https://${host}/oauth/authorize?` +
+        `https://${CLIO_HOST}/oauth/authorize?` +
         new URLSearchParams({
           response_type: "code",
           client_id: clientId,
@@ -93,7 +80,7 @@ export async function runSetup(): Promise<void> {
 
   console.log("Exchanging authorization code for tokens...");
 
-  const tokenRes = await fetch(`https://${host}/oauth/token`, {
+  const tokenRes = await fetch(`https://${CLIO_HOST}/oauth/token`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
@@ -121,7 +108,6 @@ export async function runSetup(): Promise<void> {
     client_secret: clientSecret,
     access_token: tokenData.access_token,
     refresh_token: tokenData.refresh_token,
-    region: clioRegion,
     expires_at: Date.now() + tokenData.expires_in * 1000,
   });
 

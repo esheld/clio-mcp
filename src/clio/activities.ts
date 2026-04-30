@@ -28,33 +28,4 @@ export class ActivitiesApi {
       { fields: fields ?? DEFAULT_FIELDS }
     );
   }
-
-  async create(data: {
-    type: string;
-    date: string;
-    matter?: { id: number };
-    quantity?: number;
-    price?: number;
-    note?: string;
-    activity_description?: { id: number };
-    [key: string]: unknown;
-  }) {
-    return this.client.post<ClioSingleResponse<ClioActivity>>(
-      "/activities",
-      { data },
-      { fields: DEFAULT_FIELDS }
-    );
-  }
-
-  async update(id: number, data: Record<string, unknown>) {
-    return this.client.patch<ClioSingleResponse<ClioActivity>>(
-      `/activities/${id}`,
-      { data },
-      { fields: DEFAULT_FIELDS }
-    );
-  }
-
-  async delete(id: number) {
-    return this.client.delete(`/activities/${id}`);
-  }
 }

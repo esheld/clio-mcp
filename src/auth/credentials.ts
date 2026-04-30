@@ -2,23 +2,15 @@ import { readFile, writeFile, mkdir, chmod } from "node:fs/promises";
 import { join } from "node:path";
 import { homedir } from "node:os";
 
+export const CLIO_HOST = "app.clio.com";
+
 export interface ClioCredentials {
   client_id: string;
   client_secret: string;
   access_token: string;
   refresh_token: string;
-  region: ClioRegion;
   expires_at?: number;
 }
-
-export type ClioRegion = "us" | "ca" | "eu" | "au";
-
-export const REGION_HOSTS: Record<ClioRegion, string> = {
-  us: "app.clio.com",
-  ca: "ca.app.clio.com",
-  eu: "eu.app.clio.com",
-  au: "au.app.clio.com",
-};
 
 const CONFIG_DIR = join(homedir(), ".clio-mcp");
 const CREDENTIALS_FILE = join(CONFIG_DIR, "credentials.json");
