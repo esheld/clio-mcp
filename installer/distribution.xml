@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>Clio MCP Server</title>
+    <welcome file="welcome.html" mime-type="text/html" />
+    <options customize="never" require-scripts="false" hostArchitectures="arm64,x86_64" />
+    <choices-outline>
+        <line choice="default">
+            <line choice="clio-mcp-server" />
+        </line>
+    </choices-outline>
+    <choice id="default" />
+    <choice id="clio-mcp-server" visible="false">
+        <pkg-ref id="com.clio.mcp-server" />
+    </choice>
+    <pkg-ref id="com.clio.mcp-server" version="0.1.0" onConclusion="none">clio-mcp-server.pkg</pkg-ref>
+</installer-gui-script>

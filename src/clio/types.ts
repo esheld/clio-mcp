@@ -84,6 +84,43 @@ export interface ClioTask {
   [key: string]: unknown;
 }
 
+// --- Documents ---
+
+export interface ClioDocument {
+  id: number;
+  etag?: string;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+  type?: string;
+  locked?: boolean;
+  name?: string;
+  received_at?: string;
+  filename?: string;
+  size?: number;
+  content_type?: string;
+  parent?: { id: number; name?: string; type?: string };
+  matter?: { id: number; display_number?: string; description?: string };
+  contact?: { id: number; name?: string };
+  document_category?: { id: number; name?: string };
+  creator?: { id: number; name?: string };
+  latest_document_version?: {
+    id: number;
+    document_id?: number;
+    uuid?: string;
+    filename?: string;
+    size?: number;
+    version_number?: number;
+    content_type?: string;
+    received_at?: string;
+    fully_uploaded?: boolean;
+    created_at?: string;
+    updated_at?: string;
+  };
+  external_properties?: Array<{ id: number; name?: string; value?: string }>;
+  [key: string]: unknown;
+}
+
 // --- Communications ---
 
 export interface ClioCommunication {

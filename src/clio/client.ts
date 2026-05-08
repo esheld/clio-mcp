@@ -36,6 +36,19 @@ export class ClioClient {
   }
 
   /**
+   * Follow a Clio endpoint that returns a 303 redirect (e.g. document download)
+   * and return the Location URL without following it.
+   */
+  async getRedirectUrl(path: string): Promise<string> {
+    const base = await this.baseUrl();
+    const url = `${base}${path}`;
+    const res = await fetch(url, { headers: await this.headers(), redirect: "manual" });
+    const location = res.headers.get("location");
+    if (location) return location;
+    throw new Error(`Clio API GET ${path} expected redirect but got ${res.status}`);
+  }
+
+  /**
    * Paginate through a list endpoint, collecting up to `maxItems` results.
    * Uses cursor-based pagination by default.
    */

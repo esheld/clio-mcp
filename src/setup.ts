@@ -8,6 +8,14 @@ import { CLIO_HOST, saveCredentials } from "./auth/credentials.js";
 const REDIRECT_PORT = 3456;
 const REDIRECT_URI = `http://127.0.0.1:${REDIRECT_PORT}/callback`;
 
+declare const __CLIO_CLIENT_ID__: string | undefined;
+declare const __CLIO_CLIENT_SECRET__: string | undefined;
+
+const EMBEDDED_CLIENT_ID =
+  typeof __CLIO_CLIENT_ID__ !== "undefined" ? __CLIO_CLIENT_ID__ : "";
+const EMBEDDED_CLIENT_SECRET =
+  typeof __CLIO_CLIENT_SECRET__ !== "undefined" ? __CLIO_CLIENT_SECRET__ : "";
+
 async function prompt(question: string): Promise<string> {
   const rl = createInterface({ input: stdin, output: stdout });
   const answer = await rl.question(question);
@@ -18,8 +26,15 @@ async function prompt(question: string): Promise<string> {
 export async function runSetup(): Promise<void> {
   console.log("\n🔧  Clio MCP Server — Setup\n");
 
-  const clientId = await prompt("Clio Client ID (application key): ");
-  const clientSecret = await prompt("Clio Client Secret: ");
+  let clientId = EMBEDDED_CLIENT_ID;
+  let clientSecret = EMBEDDED_CLIENT_SECRET;
+
+  if (!clientId) {
+    clientId = await prompt("Clio Client ID (application key): ");
+  }
+  if (!clientSecret) {
+    clientSecret = await prompt("Clio Client Secret: ");
+  }
 
   const authCode = await new Promise<string>((resolve, reject) => {
     const server = createServer((req, res) => {

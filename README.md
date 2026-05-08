@@ -93,6 +93,58 @@ Add to your MCP settings:
 | `list_communications` | List emails and phone calls with filters for matter, type, and date range |
 | `get_communication` | Get a single communication by ID |
 
+## Distribution (macOS .pkg Installer)
+
+Build a macOS installer package that non-technical users can double-click to install.
+
+### Build prerequisites
+
+1. All items from [Prerequisites](#prerequisites)
+2. A `.env.build` file with your Clio app credentials (see `.env.build.example`)
+
+### Building the installer
+
+```bash
+cp .env.build.example .env.build   # fill in your real credentials
+npm install
+./scripts/build-pkg.sh
+```
+
+The installer is output to `build/Clio MCP Server.pkg`.
+
+### What the installer does
+
+1. Installs the `clio-mcp-server` binary to `/usr/local/bin/`
+2. Adds the Clio MCP entry to the Claude Desktop config
+3. Opens Terminal to run the Clio OAuth login flow
+
+### End-user install instructions
+
+1. Double-click **Clio MCP Server.pkg**
+2. If macOS shows an "unidentified developer" warning: right-click the file, choose **Open**, then click **Open** in the dialog
+3. Follow the installer steps — click **Continue** then **Install**
+4. A Terminal window will open — your browser will launch to log into Clio
+5. Log in and click **Allow**
+6. Once Terminal says "Credentials saved", quit and restart **Claude Desktop**
+
+### Re-running setup
+
+If you need to re-authorize with Clio:
+
+```bash
+/usr/local/bin/clio-mcp-server setup
+```
+
+### Uninstalling
+
+```bash
+sudo rm /usr/local/bin/clio-mcp-server
+sudo rm -rf /usr/local/lib/clio-mcp
+rm -rf ~/.clio-mcp
+```
+
+Then remove the `"clio"` entry from `~/Library/Application Support/Claude/claude_desktop_config.json`.
+
 ## Development
 
 ```bash

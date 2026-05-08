@@ -12,10 +12,17 @@
   ],
   "scripts": {
     "build": "tsc",
+    "build:bundle": "node esbuild.config.mjs",
+    "build:binary": "pkg dist/bundle.cjs --targets node20-macos-arm64,node20-macos-x64 --output build/clio-mcp-server",
+    "build:pkg": "./scripts/build-pkg.sh",
     "dev": "tsc --watch",
     "start": "node dist/cli.js",
     "setup": "node dist/cli.js setup",
     "prepublishOnly": "npm run build"
+  },
+  "pkg": {
+    "assets": [],
+    "outputPath": "build"
   },
   "keywords": [
     "mcp",
@@ -36,6 +43,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@yao-pkg/pkg": "^6.19.0",
+    "esbuild": "^0.28.0",
     "typescript": "^5.7.0"
   }
 }
