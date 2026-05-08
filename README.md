@@ -8,6 +8,7 @@ A read-only [MCP (Model Context Protocol)](https://modelcontextprotocol.io) serv
 - **Activities** — view time entries and expense entries
 - **Tasks** — view tasks with assignments and due dates
 - **Communications** — view emails, phone calls, and other communications
+- **Documents** — list, view, and get download URLs for documents (including OneDrive-backed files)
 - Built-in **OAuth 2.0 setup** flow with automatic token refresh
 - **Read-only** — no data is created, modified, or deleted
 
@@ -18,9 +19,22 @@ A read-only [MCP (Model Context Protocol)](https://modelcontextprotocol.io) serv
    - Set a redirect URI to `http://127.0.0.1:3456/callback`
 3. Node.js >= 18
 
-## Setup
+## Install
 
-Run the interactive setup to authenticate with Clio:
+### Option A — macOS .pkg installer (recommended for non-developers)
+
+Download and double-click the `.pkg` file. See [Installer](#macos-pkg-installer) below for details.
+
+### Option B — from source
+
+```bash
+git clone https://github.com/esheld/clio-mcp.git
+cd clio-mcp
+npm install
+npm run build
+```
+
+Then run the interactive setup to authenticate with Clio:
 
 ```bash
 npx clio-mcp-server setup
@@ -93,7 +107,15 @@ Add to your MCP settings:
 | `list_communications` | List emails and phone calls with filters for matter, type, and date range |
 | `get_communication` | Get a single communication by ID |
 
-## Distribution (macOS .pkg Installer)
+### Documents
+
+| Tool | Description |
+|------|-------------|
+| `list_documents` | List documents with filters for matter, contact, category, parent folder, date ranges, and search query |
+| `get_document` | Get a single document by ID with metadata, external properties, and version info |
+| `get_document_download_url` | Get a temporary download URL for a document (e.g. OneDrive-backed files) |
+
+## macOS .pkg Installer
 
 Build a macOS installer package that non-technical users can double-click to install.
 
@@ -148,8 +170,8 @@ Then remove the `"clio"` entry from `~/Library/Application Support/Claude/claude
 ## Development
 
 ```bash
-git clone https://github.com/ethanheld/clio-mcp-server.git
-cd clio-mcp-server
+git clone https://github.com/esheld/clio-mcp.git
+cd clio-mcp
 npm install
 npm run build
 ```
